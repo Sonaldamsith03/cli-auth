@@ -1,0 +1,93 @@
+package com.cliauth.service;
+
+import com.cliauth.model.AuthResponse;
+import com.cliauth.model.LoginRequest;
+import com.cliauth.model.SignupRequest;
+import com.cliauth.model.User;
+import com.cliauth.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public AuthResponse register(SignupRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            return AuthResponse.builder()
+                    .status("error")
+                    .message("Email already in use")
+                    .build();
+        }
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(request.getRole() != null ? request.getRole() : "USER");
+        user.setAuthProvider("LOCAL");
+        user.setAvatar("https://api.dicebear.com/7.x/avataaars/svg?seed=" + request.getName());
+
+        User savedUser = userRepository.save(user);
+
+        return AuthResponse.builder()
+                .status("success")
+                .message("User registered successfully")
+                .token(generateMockToken())
+                .user(savedUser)
+                .build();
+    }
+
+    public AuthResponse login(LoginRequest request) {
+        Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
+
+        if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
+            return AuthResponse.builder()
+                    .status("error")
+                    .message("Invalid email or password")
+                    .build();
+        }
+
+        return AuthResponse.builder()
+                .status("success")
+                .message("Login successful")
+                .token(generateMockToken())
+                .user(userOpt.get())
+                .build();
+    }
+
+    public AuthResponse googleLogin(String email, String name, String avatar) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        User user;
+
+        if (userOpt.isPresent()) {
+            user = userOpt.get();
+        } else {
+            user = new User();
+            user.setEmail(email);
+            user.setName(name);
+            user.setRole("USER"); // Default role for social login
+            user.setAuthProvider("GOOGLE");
+            user.setAvatar(avatar);
+            user = userRepository.save(user);
+        }
+
+        return AuthResponse.builder()
+                .status("success")
+                .message("Google login successful")
+                .token(generateMockToken())
+                .user(user)
+                .build();
+    }
+
+    private String generateMockToken() {
+        return "mock-jwt-" + UUID.randomUUID().toString();
+    }
+}

@@ -42,11 +42,11 @@ export default function LoginPage() {
     
     setIsLoggingIn(true);
     try {
-      await login('USER');
+      await login(email, password);
       toast.success('Welcome back to SmartCampus');
       navigate('/dashboard');
-    } catch (error) {
-      toast.error('Authentication rejected. Verify credentials.');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Authentication rejected. Verify credentials.');
       setIsLoggingIn(false);
     }
   };
@@ -59,10 +59,10 @@ export default function LoginPage() {
     setSelectedRole(role);
     setIsLoggingIn(true);
     try {
-      await login(role);
-      toast.success(`Authenticated securely as ${role}`);
+      await googleLogin(role);
+      toast.success(`Authenticated securely as ${role} (Google)`);
       navigate('/dashboard');
-    } catch (error) {
+    } catch (error: any) {
       toast.error('OAuth handshake failed.');
       setIsLoggingIn(false);
     }
@@ -201,7 +201,7 @@ export default function LoginPage() {
                       <Input 
                         id="email" 
                         type="email" 
-                        placeholder="admin@smartcampus.edu" 
+                        placeholder="email@smartcampus.edu" 
                         className="pl-10 h-12 bg-slate-50/50 border-slate-100 focus:bg-white transition-all rounded-xl"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -272,6 +272,16 @@ export default function LoginPage() {
                   </svg>
                   Login with Workspace
                 </Button>
+
+                <div className="mt-8 text-center text-sm font-medium text-slate-500">
+                  Don&apos;t have an account?{' '}
+                  <button 
+                    onClick={() => navigate('/signup')}
+                    className="text-blue-600 hover:text-blue-700 font-bold uppercase tracking-widest text-[11px] transition-colors"
+                  >
+                    Create Profile
+                  </button>
+                </div>
               </motion.div>
             ) : (
               <motion.div
