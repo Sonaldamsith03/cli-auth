@@ -9,6 +9,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import DashboardLayout from './components/DashboardLayout';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import OverviewPage from './pages/OverviewPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 
@@ -19,6 +20,7 @@ export default function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
           {/* Protected Dashboard Routes */}

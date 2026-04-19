@@ -19,11 +19,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import NotificationPanel from './NotificationPanel';
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isNotificationsOpen, setIsNotificationsOpen] = React.useState(false);
 
   const handleLogout = () => {
     logout();
@@ -175,10 +177,20 @@ export default function DashboardLayout() {
               />
             </div>
             
-            <Button variant="ghost" size="icon" className="text-slate-500 hover:text-slate-900 relative">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setIsNotificationsOpen(true)}
+              className="text-slate-500 hover:text-slate-900 relative"
+            >
               <Bell className="h-5 w-5" />
               <span className="absolute top-2.5 right-2.5 h-2 w-2 rounded-full bg-blue-600 border-2 border-white" />
             </Button>
+            
+            <NotificationPanel 
+              isOpen={isNotificationsOpen} 
+              onClose={() => setIsNotificationsOpen(false)} 
+            />
             
             <div className="lg:hidden h-8 w-8 rounded-full overflow-hidden border border-slate-200">
               <Avatar className="h-full w-full">

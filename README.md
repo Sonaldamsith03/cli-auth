@@ -2,19 +2,49 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# CLI Auth Project
 
-This contains everything you need to run your app locally.
+This project is organized into a frontend (React/Vite) and a backend (Express).
 
-View your app in AI Studio: https://ai.studio/apps/702f9428-d7e6-4ef4-8c03-e2dae77d8c9c
+## Project Structure
+
+- `frontend/`: React application built with Vite.
+- `backend/`: Express server with TypeScript.
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
+**Prerequisites:** Node.js
 
+1.  **Install dependencies** (from the root directory):
+    ```bash
+    npm install
+    ```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+2.  **Run the application**:
+    - To run both frontend and backend:
+      ```bash
+      npm run dev
+      ```
+    - To run only frontend:
+      ```bash
+      npm run dev:frontend
+      ```
+    - To run only backend:
+      ```bash
+      npm run dev:backend
+      ```
+
+3.  **Environment Variables**:
+    - Update `.env` files in each directory as needed (see `.env.example` in `frontend/`).
+
+## Test Credentials
+
+You can use the following pre-seeded accounts to test local login:
+
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Admin** | `admin@smartcampus.edu` | `password` |
+| **Technician** | `tech@smartcampus.edu` | `password` |
+| **User** | `user@smartcampus.edu` | `password` |
+
+Alternatively, use the **Create Profile** link on the login page to register a new account with your choice of role.
